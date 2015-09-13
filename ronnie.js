@@ -1,0 +1,4 @@
+(function() {
+  true;
+
+}).call(this);
