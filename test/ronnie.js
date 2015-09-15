@@ -52,7 +52,7 @@
       expect(Ronnie.dependencies(modules, foo)).toEqual([bar]);
       return expect(Ronnie.dependencies(modules, bar)).toEqual([]);
     });
-    return it('throws an error when you have circular dependencies', function() {
+    it('throws an error when you have circular dependencies', function() {
       var bar, error, error1, foo, main_module, module, modules, ref, ref1, structure, structure_string;
       foo = {
         name: 'foo',
@@ -99,6 +99,13 @@
       return expect(function() {
         return Ronnie.circularDependenciesCheck(modules, main_module);
       }).not.toThrow();
+    });
+    return it('knows how to asynchronously load a script given its url', function(done) {
+      return Ronnie.loadScript('base/test/global.js').then(function() {
+        expect(GLOBAL).toBeDefined();
+        expect(GLOBAL).toEqual('GLOBAL');
+        return done();
+      });
     });
   });
 

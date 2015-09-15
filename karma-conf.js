@@ -15,8 +15,10 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/qlite/qlite.js',
       'ronnie.js',
-      'test/ronnie.js'
+      'test/ronnie.js',
+      { pattern: 'test/global.js', included: false }
     ],
 
 

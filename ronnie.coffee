@@ -35,4 +35,11 @@ Ronnie =
 			else
 				new_path = path.concat [dep]
 				@recursiveCircularDependenciesCheck modules, dep, new_path
+	loadScript: (url) ->
+		deferred = QLite.defer()
+		script = document.createElement 'script'
+		script.src = url
+		script.onload = -> deferred.resolve()
+		document.head.appendChild script
+		return deferred.promise
 window.Ronnie = Ronnie

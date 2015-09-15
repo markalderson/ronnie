@@ -81,6 +81,17 @@
         }
       }
       return results;
+    },
+    loadScript: function(url) {
+      var deferred, script;
+      deferred = QLite.defer();
+      script = document.createElement('script');
+      script.src = url;
+      script.onload = function() {
+        return deferred.resolve();
+      };
+      document.head.appendChild(script);
+      return deferred.promise;
     }
   };
 

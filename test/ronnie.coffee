@@ -40,10 +40,15 @@ describe 'Ronnie', ->
   		expect(error.data.circular_dependency).toEqual true
   		expect(module.name for module in error.data.sequence).toEqual ['foo', 'bar', 'foo']
   	# Remove the circular dependency to avoid errors
-  	bar = { name: 'bar' } # no more foo-dependant
+  	bar = { name: 'bar' } # no more foo-dependent
   	structure =
   		main: 'foo'
   		modules: [ foo, bar ]
   	structure_string = JSON.stringify structure
   	{ modules, main_module } = Ronnie.parse structure_string
   	expect(-> Ronnie.circularDependenciesCheck modules, main_module).not.toThrow()
+  it 'knows how to asynchronously load a script given its url', (done) ->
+    Ronnie.loadScript('base/test/global.js').then ->
+      expect(GLOBAL).toBeDefined()
+      expect(GLOBAL).toEqual 'GLOBAL'
+      done()
