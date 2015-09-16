@@ -4,11 +4,11 @@
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   Ronnie = {
-    parse: function(structure) {
+    parse: function(config) {
       var i, len, main_module, main_module_name, module, modules;
-      structure = JSON.parse(structure);
-      modules = structure.modules;
-      main_module_name = structure.main;
+      config = JSON.parse(config);
+      modules = config.modules;
+      main_module_name = config.main;
       for (i = 0, len = modules.length; i < len; i++) {
         module = modules[i];
         if (module.name === main_module_name) {
@@ -92,9 +92,85 @@
       };
       document.head.appendChild(script);
       return deferred.promise;
+    },
+    loadModule: function(module) {
+      var i, len, promises, ref, s;
+      promises = [];
+      ref = module.contains;
+      for (i = 0, len = ref.length; i < len; i++) {
+        s = ref[i];
+        promises.push(this.loadScript(s));
+      }
+      return QLite.all(promises);
+    },
+    loadModuleWithDependencies: function(modules, module, already_loaded_modules) {
+      var deferred, dependency, dependency_name, i, len, promises, ref;
+      deferred = QLite.defer();
+      if (module.requires != null) {
+        promises = [];
+        ref = module.requires;
+        for (i = 0, len = ref.length; i < len; i++) {
+          dependency_name = ref[i];
+          dependency = this.module(modules, dependency_name);
+          promises.push(this.loadModuleWithDependencies(modules, dependency, already_loaded_modules));
+        }
+        if (promises.length > 0) {
+          QLite.all(promises).then(function() {
+            if (!(indexOf.call(already_loaded_modules, module) >= 0)) {
+              return Ronnie.loadModule(module).then(function() {
+                already_loaded_modules.push(module);
+                return deferred.resolve();
+              });
+            } else {
+              return deferred.resolve();
+            }
+          });
+        }
+      } else {
+        if (!(indexOf.call(already_loaded_modules, module) >= 0)) {
+          this.loadModule(module).then(function() {
+            already_loaded_modules.push(module);
+            return deferred.resolve();
+          });
+        } else {
+          deferred.resolve();
+        }
+      }
+      return deferred.promise;
+    },
+    loadApp: function(config) {
+      var main_module, modules, ref;
+      ref = this.parse(config), modules = ref.modules, main_module = ref.main_module;
+      return this.loadModuleWithDependencies(modules, main_module, []);
+    },
+    loadConfig: function() {
+      var config_url, deferred, request, ronnie_script;
+      deferred = QLite.defer();
+      ronnie_script = document.querySelector('[data-app-config]');
+      if (ronnie_script != null) {
+        config_url = ronnie_script.getAttribute('data-app-config');
+        request = new XMLHttpRequest();
+        request.open('GET', config_url, true);
+        request.onreadystatechange = function() {
+          if (request.readyState === 4 && request.status === 200) {
+            return deferred.resolve(request.responseText);
+          }
+        };
+        request.send();
+      }
+      return deferred.promise;
+    },
+    bootstrap: function() {
+      return document.addEventListener('DOMContentLoaded', function() {
+        return Ronnie.loadConfig().then(function(config) {
+          return Ronnie.loadApp(config);
+        });
+      });
     }
   };
 
   window.Ronnie = Ronnie;
+
+  Ronnie.bootstrap();
 
 }).call(this);

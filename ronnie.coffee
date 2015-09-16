@@ -1,8 +1,8 @@
 Ronnie =
-	parse: (structure) ->
-		structure = JSON.parse structure
-		modules = structure.modules
-		main_module_name = structure.main
+	parse: (config) ->
+		config = JSON.parse config
+		modules = config.modules
+		main_module_name = config.main
 		for module in modules
 			main_module = module if module.name is main_module_name
 		return { modules: modules, main_module: main_module }
@@ -42,4 +42,48 @@ Ronnie =
 		script.onload = -> deferred.resolve()
 		document.head.appendChild script
 		return deferred.promise
+	loadModule: (module) ->
+		promises = []
+		promises.push @loadScript s for s in module.contains
+		return QLite.all promises
+	loadModuleWithDependencies: (modules, module, already_loaded_modules) ->
+		deferred = QLite.defer()
+		if module.requires?
+			promises = []
+			for dependency_name in module.requires
+				dependency = @module modules, dependency_name
+				promises.push @loadModuleWithDependencies modules, dependency, already_loaded_modules
+			if promises.length > 0
+				QLite.all(promises).then ->
+					if not (module in already_loaded_modules)
+						Ronnie.loadModule(module).then ->
+							already_loaded_modules.push module
+							deferred.resolve()
+					else deferred.resolve()
+		else
+			if not (module in already_loaded_modules)
+				@loadModule(module).then ->
+					already_loaded_modules.push module
+					deferred.resolve()
+			else deferred.resolve()
+		return deferred.promise
+	loadApp: (config) ->
+		{ modules, main_module } = @parse config
+		return @loadModuleWithDependencies modules, main_module, []
+	loadConfig: ->
+		deferred = QLite.defer()
+		ronnie_script = document.querySelector '[data-app-config]'
+		if ronnie_script?
+			config_url = ronnie_script.getAttribute 'data-app-config'
+			request = new XMLHttpRequest();
+			request.open 'GET', config_url, true
+			request.onreadystatechange = ->
+				if request.readyState == 4 && request.status == 200
+					deferred.resolve request.responseText
+			request.send()
+		return deferred.promise
+	bootstrap: ->
+		document.addEventListener 'DOMContentLoaded', ->
+			Ronnie.loadConfig().then (config) -> Ronnie.loadApp config
 window.Ronnie = Ronnie
+Ronnie.bootstrap()

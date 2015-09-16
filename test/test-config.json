@@ -1,0 +1,14 @@
+{
+    "modules": [
+    	{
+    		"name": "m7",
+			"contains": [ "base/test/s1_m7.js" ],
+			"requires": [ "m8" ]
+		},
+		{
+    		"name": "m8",
+			"contains": [ "base/test/s1_m8.js" ]
+		}
+	],
+	"main": "m7"
+}
