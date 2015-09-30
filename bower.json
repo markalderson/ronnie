@@ -1,0 +1,28 @@
+{
+  "name": "ronnie",
+  "version": "1.0.0",
+  "homepage": "https://github.com/marcoliceti/ronnie",
+  "authors": [
+    "Marco Liceti <marco.liceti@gmail.com>"
+  ],
+  "description": "Asynchronous JavaScript Loader",
+  "license": "MIT",
+  "keywords": [
+    "asynchronous",
+    "javascript",
+    "loader",
+    "script",
+    "require"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "test",
+    "Gruntfile.js",
+    "karma-conf.js",
+    "package.json",
+    ".gitignore",
+    ".git",
+    ".npmignore"
+  ]
+}
