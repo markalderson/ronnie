@@ -4,7 +4,7 @@
   "description": "Asynchronous JavaScript Loader",
   "repository": {
     "type": "git",
-    "url": "git+https://markalderson@github.com/marcoliceti/ronnie.git"
+    "url": "git+https://github.com/marcoliceti/ronnie.git"
   },
   "keywords": [
     "asynchronous",
