@@ -2,10 +2,9 @@
   "name": "ronnie",
   "version": "1.0.0",
   "description": "Asynchronous JavaScript Loader",
-  "main": "ronnie.js",
   "repository": {
     "type": "git",
-    "url": "git+https://markalderson@github.com/markalderson/ronniejs.git"
+    "url": "git+https://markalderson@github.com/marcoliceti/ronnie.git"
   },
   "keywords": [
     "asynchronous",
@@ -17,9 +16,9 @@
   "author": "Marco Liceti",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/markalderson/ronniejs/issues"
+    "url": "https://github.com/marcoliceti/ronnie/issues"
   },
-  "homepage": "https://github.com/markalderson/ronniejs#readme",
+  "homepage": "https://github.com/marcoliceti/ronnie#readme",
   "devDependencies": {
     "coffee-script": "^1.10.0",
     "grunt": "^0.4.5",
