@@ -156,7 +156,3 @@ describe 'Ronnie', ->
     expect(document.addEventListener).not.toHaveBeenCalled()
     Ronnie.bootstrap()
     expect(document.addEventListener).toHaveBeenCalledWith 'DOMContentLoaded', jasmine.any Function
-    spyOn(Ronnie, 'loadConfig').and.callThrough()
-    expect(Ronnie.loadConfig).not.toHaveBeenCalled()
-    $(document).trigger 'DOMContentLoaded'
-    expect(Ronnie.loadConfig).toHaveBeenCalled()

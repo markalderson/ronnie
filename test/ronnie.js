@@ -228,11 +228,7 @@
       spyOn(document, 'addEventListener').and.callThrough();
       expect(document.addEventListener).not.toHaveBeenCalled();
       Ronnie.bootstrap();
-      expect(document.addEventListener).toHaveBeenCalledWith('DOMContentLoaded', jasmine.any(Function));
-      spyOn(Ronnie, 'loadConfig').and.callThrough();
-      expect(Ronnie.loadConfig).not.toHaveBeenCalled();
-      $(document).trigger('DOMContentLoaded');
-      return expect(Ronnie.loadConfig).toHaveBeenCalled();
+      return expect(document.addEventListener).toHaveBeenCalledWith('DOMContentLoaded', jasmine.any(Function));
     });
   });
 
