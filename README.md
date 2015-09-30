@@ -32,7 +32,8 @@ Here is a sample configuration for a trivial [AngularJS](https://angularjs.org/)
 		},
 		{
     		"name": "myapp",
-			"contains": [ "scripts/myapp.js" ]
+			"contains": [ "scripts/myapp.js" ],
+			"requires": [ "angular" ]
 		}
 	],
 	"main": "myapp"
