@@ -9,6 +9,15 @@ module.exports = function(grunt) {
         }
       }
     },
+    concat: {
+      options: {
+        separator: '\n',
+      },
+      dist: {
+        src: ['node_modules/qlite/qlite.js', 'ronnie.js'],
+        dest: 'ronnie.js',
+      },
+    },
     karma: {
       unit: {
         configFile: 'karma-conf.js'
@@ -27,9 +36,10 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-coffee');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('compile', ['coffee']);
+  grunt.registerTask('compile', ['coffee', 'concat']);
   grunt.registerTask('test', ['karma']);
   grunt.registerTask('build', ['uglify']);
   grunt.registerTask('default', ['compile', 'test', 'build']);
